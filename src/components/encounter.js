@@ -1,32 +1,42 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import TurnCounter from './encounter/turn_counter'
-import encounter_load from '../api/encounters/load'
+import ActionMenu from './encounter/action_menu'
+import EncounterLog from './encounter/log'
+import players_index from '../api/players/index'
 
 class Encounter extends Component {
   state = {load: null}
 
-  get_current_party = () => {
-    let id = this.state.load.current_actor._id
-    return this.state.load.parties.find( (p) => {return p.actor_ids.includes(id)} )
-  }
-
   is_players_turn = () => {
-    let party = this.get_current_party()
+    let party = this.state.load.current_party
     return party.allegiance === 'player'
   }
 
-  componentDidMount() {
-    encounter_load('5a9c57695261785518c46578')
+  constructor() {
+    super()
+    players_index()
       .then(res => res.json())
-      .then(encounter => 
-        this.setState({ load: encounter })
-        // fetch('/abilities/select', {ids: encounter.current_actor.ability_ids})
-        //   .then(res => res.json())
-        //   .then(abilities => 
-        //     this.setState({ abilities_select: abilities })
-        //   )
-      )
+      .then(data => {
+        global.player = data.player
+        const id      = data.player.encounter_id
+        const room    = 'encounter_' + id
+        global.room   = room
+        global.socket.on('encounter.state.update', (data) => {
+          console.log("data", data)
+          this.setState({ load: data })
+          let state = data.encounter.encounter_states.length - 1
+          let current_party = data.current_party
+          if (current_party.allegiance === 'enemy') {
+            global.socket.emit('encounter.state.next', { id, room, state });
+          }
+        })
+        global.socket.emit('encounter.join', { id, room });
+      })
+  }
+
+  componentWillUnmount() {
+    global.socket.emit('encounter.leave', { id: global.player.encounter_id, room: global.room })
   }
 
   render() {
@@ -34,14 +44,21 @@ class Encounter extends Component {
     return (
       <div>
         {load ? (
-          <div>
-            <TurnCounter load={load} />
-            <h1> It's {load.current_actor.name}'s turn </h1>
-            {this.is_players_turn() ? ( <h3>Player's turn</h3> ) : ( <h3>Enemy's turn</h3> )}
+          <div style={{display: 'flex'}}>
+            <div style={{flex: '50%'}}>
+              <TurnCounter load={load} />
+              <h1> {load.current_party.allegiance.toUpperCase()}'S TURN ({load.current_actor.name}) </h1>
+              <div>
+                {this.is_players_turn() && (
+                <ActionMenu load={load} />
+                )}
+              </div>
+            </div>
+            <div style={{flex: '50%'}}>
+              <EncounterLog load={load} />
+            </div>
           </div>
-        ) : (
-          <div>Loading...</div>
-        )}
+        ) : ( <div>Loading...</div> )}
       </div>
     );
   }

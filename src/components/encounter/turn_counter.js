@@ -3,7 +3,10 @@ import TurnCounterActor from '../encounter/turn_counter/actor'
 
 const TurnCounter = ({ load }) => (
   <div>
-    <table>
+    <table style={{border: '1px solid black'}}>
+      <thead>
+        <th> TURNS: </th>
+      </thead>
       <tbody>
         <tr>
           {

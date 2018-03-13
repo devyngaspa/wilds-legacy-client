@@ -6,8 +6,8 @@ const TurnCounterActor = ({ actor, current }) => {
   };
 
   return (
-    <td current={is_current() ? 'true' : undefined}>
-      {is_current() ? (<b>{actor.name}</b>) : (<div>{actor.name}</div>)}
+    <td style={{padding: '0px 20px'}} current={is_current() ? 'true' : undefined}>
+      {is_current() ? (<b>{actor.name}<br/>HP: {actor.hp}</b>) : (<div>{actor.name}<br/>HP: {actor.hp}</div>)}
     </td>
   )
 

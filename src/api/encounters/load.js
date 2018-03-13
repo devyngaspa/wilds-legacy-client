@@ -1,4 +1,3 @@
-
 const encounter_load = (id) => {
   return fetch(`/encounters/${id}/load`)
 }
