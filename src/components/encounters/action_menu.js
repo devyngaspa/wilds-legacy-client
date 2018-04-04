@@ -1,6 +1,6 @@
 import React from 'react'
-import ActionMenuAction from '../encounter/action_menu/action'
-import TargetMenu from '../encounter/target_menu'
+import ActionMenuAction from '../encounters/action_menu/action'
+import TargetMenu from '../encounters/target_menu'
 
 class ActionMenu extends React.Component {
 

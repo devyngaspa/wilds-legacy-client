@@ -1,11 +1,11 @@
 import React from 'react'
-import TargetMenuTarget from '../encounter/target_menu/target'
+import TargetMenuTarget from '../encounters/target_menu/target'
 
 class TargetMenu extends React.Component {
 
   constructor(props) {
     super(props)
-    let party = props.load.parties.find((party) => { return party.allegiance == 'enemy' })
+    let party = props.load.parties.find((party) => { return party.allegiance === 'enemy' })
     this.handle_click = this.handle_click.bind(this)
     this.state = {targetables: props.load.actors.filter( (actor) => { return party.actor_ids.includes(actor._id)})}
   }

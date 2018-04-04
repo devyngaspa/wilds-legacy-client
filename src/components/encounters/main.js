@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-import TurnCounter from './encounter/turn_counter'
-import ActionMenu from './encounter/action_menu'
-import EncounterLog from './encounter/log'
-import players_index from '../api/players/index'
+import TurnCounter from '../encounters/turn_counter'
+import ActionMenu from '../encounters/action_menu'
+import EncounterLog from '../encounters/log'
+import players_index from '../../api/players/index'
 
 class Encounter extends Component {
   state = {load: null}

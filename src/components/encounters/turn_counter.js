@@ -1,5 +1,5 @@
 import React from 'react'
-import TurnCounterActor from '../encounter/turn_counter/actor'
+import TurnCounterActor from '../encounters/turn_counter/actor'
 
 const TurnCounter = ({ load }) => (
   <div>
