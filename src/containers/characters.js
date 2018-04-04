@@ -12,6 +12,8 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
+import whelp from '../helpers/base'
+
 const bg_style = {
   position: 'absolute',
   top: '0',
@@ -31,14 +33,6 @@ const modal_style = {
   }
 }
 
-const obj_find = function (obj, ...args) {
-  if (args.length === 0) { return obj }
-  let prop = args[0]
-  if (obj[prop] === undefined) { return undefined }
-  return obj_find(obj[prop], ...args.slice(1))
-}
-
-
 class CharactersContainer extends Component {
 
   render() {
@@ -53,6 +47,7 @@ class CharactersContainer extends Component {
                 {key: 'inactive', to: '/characters/inactive', params: {}, label: 'Recruit'},
                 {key: 'deceased', to: '/characters/deceased', params: {}, label: 'Deceased'}]
               } location={this.props.location}/>
+              <h1>Characters</h1>
               <Route path={'/characters/active'} component={CharactersActive}/>
               <Route path={'/characters/inactive'} component={CharactersInactive}/>
               <Route path={'/characters/deceased'} component={CharactersDeceased}/>
@@ -67,7 +62,7 @@ class CharactersContainer extends Component {
 
 export default withRouter(connect((store) => {
     return {
-      player: obj_find(store, 'player', 'player')
+      player: whelp.object.find(store, 'player', 'player')
     };
   }, (dispatch) => {
     return {

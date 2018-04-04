@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import Modal from 'react-modal'
 import { Container, Row, Col} from 'react-grid-system'
-import TabList from '../common/tab_list'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import Expedition from './in_progress/expedition'
+import Expedition from '../../components/expeditions/in_progress/expedition'
+import whelp from '../../helpers/base'
 
 var modal_style = {
   content : {
@@ -20,13 +20,6 @@ var modal_style = {
     overflow              : 'visible',
     margin                : '40px 0'
   }
-}
-
-const obj_find = function (obj, ...args) {
-  if (args.length === 0) { return obj }
-  let prop = args[0]
-  if (obj[prop] === undefined) { return undefined }
-  return obj_find(obj[prop], ...args.slice(1))
 }
 
 class ExpeditionsInProgress extends Component {
@@ -54,7 +47,7 @@ class ExpeditionsInProgress extends Component {
   render() {
     return (
       <ul>
-        { (this.props.expeditions) ? (
+        { (this.props.expeditions && this.props.quests && this.props.quest_tmpls && this.props.characters && this.props.player) ? (
           this.get_expeditions().map((expedition) => (
             <Expedition key={expedition._id} expedition={expedition} player={this.props.player}/>
           ))) : (
@@ -68,11 +61,11 @@ class ExpeditionsInProgress extends Component {
 
 export default connect((store) => {
     return {
-      expeditions: obj_find(store, 'player', 'player', 'state', 'expeditions'),
-      quests:      obj_find(store, 'player', 'player', 'state', 'quests'),
-      characters:  obj_find(store, 'player', 'player', 'state', 'characters'),
-      player:      obj_find(store, 'player', 'player'),
-      quest_tmpls: obj_find(store, 'game', 'game', 'quest_tmpls')
+      expeditions: whelp.object.find(store, 'player', 'player', 'state', 'expeditions'),
+      quests:      whelp.object.find(store, 'player', 'player', 'state', 'quests'),
+      characters:  whelp.object.find(store, 'player', 'player', 'state', 'characters'),
+      player:      whelp.object.find(store, 'player', 'player'),
+      quest_tmpls: whelp.object.find(store, 'game', 'game', 'quest_tmpls')
     };
   }, (dispatch) => {
     return {

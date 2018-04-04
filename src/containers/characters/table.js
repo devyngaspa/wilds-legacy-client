@@ -4,16 +4,10 @@ import { Container, Row, Col} from 'react-grid-system'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import Character from '../../components/characters/character'
+import whelp from '../../helpers/base'
 
 const table_style = {
   width: '100%'
-}
-
-const obj_find = function (obj, ...args) {
-  if (args.length === 0) { return obj }
-  let prop = args[0]
-  if (obj[prop] === undefined) { return undefined }
-  return obj_find(obj[prop], ...args.slice(1))
 }
 
 class CharactersTable extends Component {
@@ -79,8 +73,8 @@ class CharactersTable extends Component {
 
 export default connect((store) => {
     return {
-      character_tmpls: obj_find(store, 'game', 'game', 'character_tmpls'),
-      characters:  obj_find(store, 'player', 'player', 'state', 'characters')
+      character_tmpls: whelp.object.find(store, 'game', 'game', 'character_tmpls'),
+      characters:      whelp.object.find(store, 'player', 'player', 'state', 'characters')
     };
   }, (dispatch) => {
     return {
