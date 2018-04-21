@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import Modal from 'react-modal'
-import players_index from '../api/players/index'
 import Background from '../assets/images/bg.jpg'
 import { Container, Row, Col} from 'react-grid-system'
 import TabList from '../components/common/tab_list'
@@ -14,6 +13,8 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 
 import whelp from '../helpers/base'
+
+Modal.setAppElement('#root')
 
 const bg_style = {
   position: 'absolute',

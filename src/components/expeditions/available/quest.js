@@ -7,6 +7,7 @@ const AvailableQuest = ({ quest }) => (
   <Link to={`/expeditions/new?quest_id=${quest._id}`}>
     <h1>{quest.quest_tmpl.name}
     </h1>
+    <h3>Level {quest.level.value}</h3>
     <h3>{quest.objective}
     </h3>
     <p>{quest.difficulty}</p>

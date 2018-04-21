@@ -41,6 +41,12 @@ export default function player(state = initial_state, action) {
         player: Object.assign(dcopy(state.player), {state: action.payload})
       }
 
+    case "EXPEDITION_MOCK_UPDATE":
+      return {
+        ...state,
+        player: Object.assign(dcopy(state.player), {mock: action.payload})
+      }
+
     default:
       return state
   }

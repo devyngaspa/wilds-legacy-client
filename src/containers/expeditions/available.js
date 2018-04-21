@@ -37,7 +37,8 @@ class ExpeditionsAvailable extends Component {
     return {
       threats:    this.props.threats.filter((threat) => { return quest.threat_ids.includes(threat._id) }),
       quest_tmpl: this.props.quest_tmpls.find((quest_tmpl) => { return quest_tmpl._id === quest.quest_tmpl_id }),
-      rewards:    this.get_rewards_data(quest.rewards)
+      rewards:    this.get_rewards_data(quest.rewards),
+      level:      this.props.levels.find((level) => { return level._id === quest.level_id }),
     }
   }
 
@@ -79,6 +80,7 @@ export default connect((store) => {
       threats:     whelp.object.find(store, 'game', 'game', 'threats'),
       quest_tmpls: whelp.object.find(store, 'game', 'game', 'quest_tmpls'),
       item_tmpls:  whelp.object.find(store, 'game', 'game', 'item_tmpls'),
+      levels:      whelp.object.find(store, 'game', 'game', 'levels'),
       characters:  whelp.object.find(store, 'player', 'player', 'state', 'characters')
     };
   }, (dispatch) => {

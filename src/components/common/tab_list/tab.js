@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
 const label_style = {
   textAlign: 'center',
-  margin: '0'
+  margin: '10px 0'
 }
 
 const get_class_names = (to, location) => {

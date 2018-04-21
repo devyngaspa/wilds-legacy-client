@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import TurnCounter from '../encounters/turn_counter'
 import ActionMenu from '../encounters/action_menu'
 import EncounterLog from '../encounters/log'
-import players_index from '../../api/players/index'
 
 class Encounter extends Component {
   state = {load: null}
@@ -13,26 +12,26 @@ class Encounter extends Component {
     return party.allegiance === 'player'
   }
 
-  constructor() {
-    super()
-    players_index()
-      .then(res => res.json())
-      .then(data => {
-        global.player = data.player
-        const id      = data.player.encounter_id
-        const room    = 'encounter_' + id
-        global.room   = room
-        global.socket.on('encounter.state.update', (data) => {
-          this.setState({ load: data })
-          let state = data.encounter.encounter_states.length - 1
-          let current_party = data.current_party
-          if (current_party.allegiance === 'enemy') {
-            global.socket.emit('encounter.state.next', { id, room, state });
-          }
-        })
-        global.socket.emit('encounter.join', { id, room });
-      })
-  }
+  // constructor() {
+  //   super()
+  //   players_index()
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       global.player = data.player
+  //       const id      = data.player.encounter_id
+  //       const room    = 'encounter_' + id
+  //       global.room   = room
+  //       global.socket.on('encounter.state.update', (data) => {
+  //         this.setState({ load: data })
+  //         let state = data.encounter.encounter_states.length - 1
+  //         let current_party = data.current_party
+  //         if (current_party.allegiance === 'enemy') {
+  //           global.socket.emit('encounter.state.next', { id, room, state });
+  //         }
+  //       })
+  //       global.socket.emit('encounter.join', { id, room });
+  //     })
+  // }
 
   componentWillUnmount() {
     global.socket.emit('encounter.leave', { id: global.player.encounter_id, room: global.room })

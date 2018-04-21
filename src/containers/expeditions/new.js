@@ -19,10 +19,8 @@ class ExpeditionsNew extends Component {
   }
 
   get_threat_is_countered (threat, character) {
-    const counter_ids      = threat.counter_ids
-    const abilities        = character.abilities
-    const ability_tmpl_ids = abilities.map((ability) => { return ability.ability_tmpl_id })
-    return !!(counter_ids.find((counter_id) => { return ability_tmpl_ids.includes(counter_id) }))
+    const counter_ids = threat.counter_ids
+    return !!(counter_ids.find((counter_id) => { return character.trait_ids.includes(counter_id) }))
   }
 
   get_occupation_text (occupation) {
@@ -50,7 +48,9 @@ class ExpeditionsNew extends Component {
   get_characters () {
     const characters = whelp.object.find(this.props, 'player', 'state', 'characters')
     if (!characters) { return [] }
-    return characters.map((character) => { return this.get_character_data(character) })
+    return characters
+      .filter((character) => { return character.state === 'active' })
+      .map((character) => { return this.get_character_data(character) })
   }
 
   get_quests() {
@@ -58,22 +58,32 @@ class ExpeditionsNew extends Component {
   }
 
   get_quest () {
-    const params  = new URLSearchParams(this.props.location.search.slice(1))
-    const id      = params.get('quest_id')
-    const quests  = this.get_quests()
-    const quest   = quests.find((quest) => { return quest._id === id })
-    const threats = this.props.game.threats.filter((threat) => { return quest.threat_ids.includes(threat._id) })
+    let params  = new URLSearchParams(this.props.location.search.slice(1))
+    let id      = params.get('quest_id')
+    let quests  = this.get_quests()
+    let quest   = quests.find((quest) => { return quest._id === id })
+    let threats = this.props.game.threats.filter((threat) => { return quest.threat_ids.includes(threat._id) })
     return Object.assign({}, quest, { threats: threats })
   }
 
   toggle_select_character (character) {
-    const ids = this.state.selected_characters.map((character) => { return character._id })
-    if (ids.includes(character._id)) { 
-      this.setState({ selected_characters: this.state.selected_characters.filter((item) => { return item._id !== character._id })})
+
+    let character_ids = this.state.selected_characters.map((character) => { return character._id })
+    let callback = () => { 
+      let room      = this.props.player.room;
+      let ids       = this.state.selected_characters.map((character) => { return character._id });
+      let quest_id  = this.get_quest()._id;
+      global.socket.emit('expedition.mock', { quest_id, character_ids: ids, room });
+    }
+
+    if (character_ids.includes(character._id)) { 
+      this.setState({ selected_characters: this.state.selected_characters.filter((item) => { return item._id !== character._id })}, callback)
     }
     else {
-      this.setState({ selected_characters: this.state.selected_characters.concat([character])})
+      this.setState({ selected_characters: this.state.selected_characters.concat([character])}, callback)
     }
+    
+
   }
 
   submit () {
@@ -107,6 +117,16 @@ class ExpeditionsNew extends Component {
                   ))
                 }
               </ul>
+              <div>
+                { this.props.mock ? (
+                  <div>
+                    <div>Chance to succeed: {Math.round(this.props.mock.succeed * 100, 0)}%</div>
+                    <div>Duration: {whelp.time.duration_format(this.props.mock.duration)}</div>
+                    <div>(Character quickness reduces it by {whelp.time.duration_format(this.props.mock.duration_reduction)})</div>
+                  </div>
+                ) : (<div></div>)
+                }
+              </div>
             </Col>
           </Row>
           <Row>
@@ -121,7 +141,8 @@ class ExpeditionsNew extends Component {
 export default connect((store) => {
     return {
       player: whelp.object.find(store, 'player', 'player'),
-      game:   whelp.object.find(store, 'game', 'game')
+      game:   whelp.object.find(store, 'game', 'game'),
+      mock:   whelp.object.find(store, 'player', 'player', 'mock')
     };
   }, (dispatch) => {
     return {

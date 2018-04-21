@@ -1,4 +1,4 @@
-import players_index from '../api/players/index'
+import players_show from '../api/players/show'
 
 function get_player_room_name (player) {
   return 'player_' + player._id
@@ -13,6 +13,12 @@ function player_room_join (player, dispatch) {
       payload: state
     })
   })
+  global.socket.on('expedition.mock.update', (state) => {
+    dispatch({
+      type: 'EXPEDITION_MOCK_UPDATE',
+      payload: state
+    })
+  })
   global.socket.emit('player.join', { id, room });
   dispatch({
     type: 'PLAYER_ROOM_JOIN',
@@ -20,12 +26,12 @@ function player_room_join (player, dispatch) {
   })
 }
 
-export default function get_player() {
+export default function get_player(user_id) {
 
   return (dispatch) => {
     return dispatch({
       type: 'PLAYER_SHOW',
-      payload: players_index()
+      payload: players_show({ user_id })
         .then(res => res.json())
         .then(data => { 
           player_room_join(data.player, dispatch)

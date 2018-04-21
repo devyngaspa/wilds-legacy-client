@@ -37,10 +37,11 @@ class CharactersContainer extends Component {
 
   render() {
     const player = this.props.player;
+    const game   = this.props.game;
     return (
       <div style={bg_style}>
         <Modal style={modal_style} isOpen={true}>
-          { player.state ? (
+          { (player.state && game) ? (
             <div>
               <TabList tabs={
                 [{key: 'active',  to: '/characters/active',   params: {}, label: 'Active'}, 
@@ -62,7 +63,8 @@ class CharactersContainer extends Component {
 
 export default withRouter(connect((store) => {
     return {
-      player: whelp.object.find(store, 'player', 'player')
+      player: whelp.object.find(store, 'player', 'player'),
+      game:   whelp.object.find(store, 'game', 'game')
     };
   }, (dispatch) => {
     return {

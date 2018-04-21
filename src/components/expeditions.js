@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
-import players_index from '../api/players/index'
 
 class Expeditions extends Component {
   state = {load: null}

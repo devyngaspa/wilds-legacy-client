@@ -28,6 +28,8 @@ class Landing extends Component {
     return (
       <div style={bg_style}>
         <h1 style={title_style}> WILDS </h1>
+        <h1 style={{color: 'white', textAlign: 'center', fontStyle: 'italic'}}> An ancient evil defiles the great wilds</h1>
+        <h1 style={{color: 'white', textAlign: 'center', fontStyle: 'italic'}}> Brave survivors band together to strike it down</h1>
       </div>
     );
   }

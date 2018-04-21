@@ -5,6 +5,7 @@
   left:     -1px;
   margin:   0;
   padding:  0;
+  z-index: 99999;
 }
 
 .modal-tab__item {
@@ -24,3 +25,22 @@
 .dashboard__area:hover {
   cursor: pointer;
 }
+
+.ReactModal__Content {
+  opacity: 0.9;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li:nth-child(even) {background: #eaf2fc;}
